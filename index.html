@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Kesekretariatan LDM — Pusat Administrasi</title>
+    <link rel="icon" type="image/png" href="Logo LDM.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#e6f4ea',
+                            100: '#cce9d5',
+                            500: '#00923f', // Main exact color requested
+                            600: '#007a34',
+                            700: '#006129',
+                            800: '#00491f',
+                            900: '#003114'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #00923f; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #007a34; }
+        
+        /* Dots pattern for cards/modals requested */
+        .bg-dots {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1.5px, transparent 1.5px);
+            background-size: 16px 16px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-row justify-between items-center h-20">
+                <!-- Logo & Brand (Editable Img) -->
+                <a href="#" onclick="switchTab('beranda')" class="flex flex-row items-center gap-3 group">
+                    <img src="logo ldm bro.png" alt="Logo LDM" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl object-cover shadow-sm group-hover:scale-105 transition-transform">
+                    <div>
+                        <span class="text-[9px] sm:text-[10px] md:text-xs font-semibold text-primary-600 tracking-wider uppercase block">Portal Kesekretariatan</span>
+                        <h1 class="text-sm sm:text-base lg:text-xl font-bold text-slate-900 tracking-tight">Lembaga Dakwah Mahasiswa</h1>
+                    </div>
+                </a>
+
+                <!-- Desktop Menu (Single Row) -->
+                <nav class="hidden md:flex flex-row items-center space-x-1 lg:space-x-2">
+                    <button onclick="switchTab('beranda')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-colors text-primary-600 bg-primary-50" data-target="beranda">
+                        <i class="fa-solid fa-house mr-1.5"></i> Beranda
+                    </button>
+                    <button onclick="switchTab('pengumuman')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-colors text-slate-600 hover:text-primary-600 hover:bg-slate-100" data-target="pengumuman">
+                        <i class="fa-solid fa-bullhorn mr-1.5"></i> Pengumuman
+                    </button>
+                    <button onclick="switchTab('sop')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-colors text-slate-600 hover:text-primary-600 hover:bg-slate-100" data-target="sop">
+                        <i class="fa-solid fa-file-shield mr-1.5"></i> SOP
+                    </button>
+                    <button onclick="switchTab('templates')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-colors text-slate-600 hover:text-primary-600 hover:bg-slate-100" data-target="templates">
+                        <i class="fa-solid fa-download mr-1.5"></i> Template
+                    </button>
+                    <button onclick="switchTab('arsip')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-colors text-slate-600 hover:text-primary-600 hover:bg-slate-100" data-target="arsip">
+                        <i class="fa-solid fa-magnifying-glass mr-1.5"></i> Cek Arsip
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button (Hamburger) -->
+                <div class="block md:hidden">
+                    <button id="mobile-menu-btn" class="p-2.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors">
+                        <i class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-1 shadow-lg">
+            <button onclick="switchTab('beranda'); toggleMobileMenu();" class="nav-btn-mobile w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-primary-600 bg-primary-50" data-target="beranda">
+                <i class="fa-solid fa-house mr-2"></i> Beranda
+            </button>
+            <button onclick="switchTab('pengumuman'); toggleMobileMenu();" class="nav-btn-mobile w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100" data-target="pengumuman">
+                <i class="fa-solid fa-bullhorn mr-2"></i> Pengumuman
+            </button>
+            <button onclick="switchTab('sop'); toggleMobileMenu();" class="nav-btn-mobile w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100" data-target="sop">
+                <i class="fa-solid fa-file-shield mr-2"></i> SOP Persuratan
+            </button>
+            <button onclick="switchTab('templates'); toggleMobileMenu();" class="nav-btn-mobile w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100" data-target="templates">
+                <i class="fa-solid fa-download mr-2"></i> Template Surat
+            </button>
+            <button onclick="switchTab('arsip'); toggleMobileMenu();" class="nav-btn-mobile w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100" data-target="arsip">
+                <i class="fa-solid fa-magnifying-glass mr-2"></i> Cek Arsip
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        
+        <!-- ================= BERANDA TAB ================= -->
+        <section id="page-beranda" class="tab-content block">
+            <!-- Hero Banner -->
+            <div class="relative bg-gradient-to-r from-primary-900 via-primary-800 to-primary-700 text-white overflow-hidden py-20 lg:py-28">
+                <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                        <div class="lg:col-span-7 space-y-6">
+                            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-emerald-200 text-xs font-medium">
+                                <i class="fa-solid fa-shield-halved"></i> Administrasi & Kesekretariatan Resmi
+                            </div>
+                            <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+                                Kesekretariatan <span class="text-emerald-300">Lembaga Dakwah Mahasiswa</span>
+                            </h2>
+                            <p class="text-slate-200 text-base sm:text-lg max-w-2xl leading-relaxed font-light">
+                                Portal terpadu kesekretariatan Lembaga Dakwah Mahasiswa. Mempermudah pengurus dan kader dalam pengelolaan surat, pengecekan nomor surat, pengunduhan template surat, serta informasi terkait kesekretariatan.
+                            </p>
+                            <div class="flex flex-wrap gap-4 pt-2">
+                                <button onclick="switchTab('templates')" class="bg-white text-primary-900 hover:bg-emerald-50 font-semibold px-6 py-3.5 rounded-xl shadow-lg transition-all flex items-center gap-2.5 text-sm">
+                                    <i class="fa-solid fa-download text-primary-600"></i> Ambil Template Surat
+                                </button>
+                                <button onclick="switchTab('sop')" class="bg-primary-700/60 hover:bg-primary-700 text-white border border-white/20 font-semibold px-6 py-3.5 rounded-xl backdrop-blur-md transition-all flex items-center gap-2.5 text-sm">
+                                    <i class="fa-solid fa-book-open"></i> Pelajari SOP Persuratan
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Stats -->
+                        <div class="lg:col-span-5">
+                            <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+                                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-chart-pie text-emerald-300"></i> Statistik Kesekretariatan
+                                </h3>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="bg-white/10 rounded-2xl p-4 border border-white/10">
+                                        <span class="block text-3xl font-extrabold text-white">78</span>
+                                        <span class="text-xs text-emerald-200 font-medium">Surat Dikeluarkan</span>
+                                    </div>
+                                    <div class="bg-white/10 rounded-2xl p-4 border border-white/10">
+                                        <span class="block text-3xl font-extrabold text-white">14</span>
+                                        <span class="text-xs text-emerald-200 font-medium">Template Surat</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <span class="px-3.5 py-1 rounded-full bg-primary-50 text-primary-700 font-semibold text-xs tracking-wider uppercase">Layanan Terpadu</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Pusat Informasi Administrasi & Kesekretariatan</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">            
+                    <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200/80 flex flex-col justify-between">
+                        <div>
+                            <div class="w-16 h-16 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-2xl mb-6">
+                                <i class="fa-solid fa-file-lines"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">SOP & Alur Persuratan</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-6">Panduan pembutan surat, ketentuan format nomor surat, serta pengarsipan surat.</p>
+                        </div>
+                        <button onclick="switchTab('sop')" class="inline-flex items-center gap-2 text-primary-600 font-semibold text-sm">
+                            Lihat SOP Lengkap <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200/80 flex flex-col justify-between">
+                        <div>
+                            <div class="w-16 h-16 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-2xl mb-6">
+                                <i class="fa-solid fa-folder-tree"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Template Berkas</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-6">Kumpulan master dokumen siap unduh: Surat Tugas, Permohonan, Keterangan aktif, Undangan, hingga Proposal.</p>
+                        </div>
+                        <button onclick="switchTab('templates')" class="inline-flex items-center gap-2 text-primary-600 font-semibold text-sm">
+                            Unduh Template <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200/80 flex flex-col justify-between">
+                        <div>
+                            <div class="w-16 h-16 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-2xl mb-6">
+                                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Periksa Arsip</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-6">Cek nomor surat keluar secara langsung melalui sistem arsip terpadu kami.</p>
+                        </div>
+                        <button onclick="switchTab('arsip')" class="inline-flex items-center gap-2 text-primary-600 font-semibold text-sm">
+                            Cek Nomor Surat <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PENGUMUMAN TAB ================= -->
+        <section id="page-pengumuman" class="tab-content hidden bg-slate-100 min-h-screen py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-12 space-y-3">
+                    <h2 class="text-3xl font-extrabold text-slate-900">Pengumuman & Agenda</h2>
+                    <p class="text-slate-600 text-sm">Update informasi terkini seputar administrasi, aturan baru, dan agenda kesekretariatan lembaga.</p>
+                </div>
+                
+                <div id="pengumuman-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            </div>
+        </section>
+
+        <!-- ================= SOP PERSURATAN TAB ================= -->
+        <section id="page-sop" class="tab-content hidden">
+            <!-- Header Banner -->
+            <div class="bg-primary-900 text-white py-16 px-4">
+                <div class="max-w-7xl mx-auto text-center space-y-4">
+                    <span class="px-3.5 py-1 rounded-full bg-primary-800 text-emerald-300 font-semibold text-xs tracking-wider uppercase border border-primary-700">Standar Operasional Prosedur</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">SOP Persuratan LDM</h2>
+                </div>
+            </div>
+
+            <!-- Segmented Tabs -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="flex flex-wrap justify-center gap-2 mb-10 bg-white p-2 rounded-2xl shadow-sm border border-slate-200 max-w-3xl mx-auto">
+                    <button onclick="switchSopTab('alur')" class="sop-tab-btn flex-1 min-w-[140px] py-3 px-4 rounded-xl font-semibold text-sm transition-all text-white bg-primary-500 shadow-sm" data-sop="alur"><i class="fa-solid fa-route mr-2"></i> Alur</button>
+                    <button onclick="switchSopTab('nomor')" class="sop-tab-btn flex-1 min-w-[140px] py-3 px-4 rounded-xl font-semibold text-sm transition-all text-slate-600 hover:bg-slate-100" data-sop="nomor"><i class="fa-solid fa-hashtag mr-2"></i> Nomor</button>
+                    <button onclick="switchSopTab('arsip-sop')" class="sop-tab-btn flex-1 min-w-[140px] py-3 px-4 rounded-xl font-semibold text-sm transition-all text-slate-600 hover:bg-slate-100" data-sop="arsip-sop"><i class="fa-solid fa-box-archive mr-2"></i> Arsip</button>
+                    <button onclick="switchSopTab('etika')" class="sop-tab-btn flex-1 min-w-[140px] py-3 px-4 rounded-xl font-semibold text-sm transition-all text-slate-600 hover:bg-slate-100" data-sop="etika"><i class="fa-solid fa-circle-check mr-2"></i> Ketentuan</button>
+                </div>
+
+                <!-- SOP Content Area -->
+                <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-slate-200 max-w-5xl mx-auto">
+                    
+                    <!-- Tab 1: Alur Pengajuan -->
+                    <div id="sop-alur" class="sop-content space-y-8 block">
+                        <h3 class="text-2xl font-bold text-slate-900 border-b border-slate-100 pb-4">Alur Persuratan</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+                            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 flex flex-col justify-between relative">
+                                <div class="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-primary-500 text-white font-bold flex items-center justify-center text-sm shadow">1</div>
+                                <h4 class="font-bold text-slate-900 mt-2">Pembuatan Draft Surat</h4>
+                                <p class="text-slate-600 text-xs leading-relaxed mt-2">Membuat draft surat dengan template resmi.</p>
+                            </div>
+                            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 flex flex-col justify-between relative">
+                                <div class="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-primary-500 text-white font-bold flex items-center justify-center text-sm shadow">2</div>
+                                <h4 class="font-bold text-slate-900 mt-2">Validasi Sekretaris Umum</h4>
+                                <p class="text-slate-600 text-xs leading-relaxed mt-2">Surat yang telah dibuat sudah sesuai dan disetjui oleh Sekretaris Umum.</p>
+                            </div>
+                            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 flex flex-col justify-between relative">
+                                <div class="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-primary-500 text-white font-bold flex items-center justify-center text-sm shadow">3</div>
+                                <h4 class="font-bold text-slate-900 mt-2">Pengiriman Surat</h4>
+                                <p class="text-slate-600 text-xs leading-relaxed mt-2">Mengirimkan surat kepda pihak yang dituju.</p>
+                            </div>
+                            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 flex flex-col justify-between relative">
+                                <div class="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-primary-500 text-white font-bold flex items-center justify-center text-sm shadow">4</div>
+                                <h4 class="font-bold text-slate-900 mt-2">Pengarsipan Surat</h4>
+                                <p class="text-slate-600 text-xs leading-relaxed mt-2">Merekap surat ke Spredsheet dan menguploadnya ke Google Drive.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Ketentuan Nomor -->
+                    <div id="sop-nomor" class="sop-content space-y-8 hidden">
+                        <div class="border-b border-slate-100 pb-4">
+                            <h3 class="text-2xl font-bold text-slate-900">Format & Ketentuan Penomoran Surat</h3>
+                            <p class="text-slate-600 text-sm mt-1">Struktur kode penomoran resmi yang berlaku di lingkungan Lembaga Dakwah Mahasiswa.</p>
+                        </div>
+
+                        <div class="bg-slate-900 text-white p-6 rounded-2xl font-mono text-center sm:text-lg shadow-inner">
+                            <span class="text-emerald-300">[Nomor Surat]</span> / <span class="text-emerald-300">[A atau B]</span> / <span class="text-emerald-300">[Kode Surat]</span> / <span class="text-emerald-300">[Kode Bidang]</span> / <span class="text-emerald-300">UKM-LDM</span> / <span class="text-emerald-300">[Umur LDM]</span> / <span class="text-emerald-300">[Bulan Romawi]</span> / <span class="text-emerald-300">[Tahun]</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                                <h4 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-code text-primary-600"></i> Kode Bidang
+                                </h4>
+                                <ul class="space-y-2 text-sm text-slate-600">
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Sekretaris Umum</span> <code class="font-bold text-slate-900">SEKUM</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Bendahara Umum</span> <code class="font-bold text-slate-900">BENDUM</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Bidang Hubungan Masyarakat</span> <code class="font-bold text-slate-900">BID-HUMAS</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Bidang Pengembangan Sumber Daya Insani</span> <code class="font-bold text-slate-900">BID-PSDI</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Bidang Muslimah</span> <code class="font-bold text-slate-900">BID-MUSLIMAH</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Bidang Syiar</span> <code class="font-bold text-slate-900">BID-SYIAR</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Bidang Media dan Informasi</span> <code class="font-bold text-slate-900">BID-MEDINFO</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Bidang Pengabdian dan Pembinaan Masyarakat</span> <code class="font-bold text-slate-900">BID-PPM</code></li>
+                                    <li class="flex justify-between"><span>Bidang Ekonomi Kreatif</span> <code class="font-bold text-slate-900">BID-EKRAF</code></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                                <h4 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-code text-primary-600"></i> Jenis Surat
+                                </h4>
+                                <ul class="space-y-2 text-sm text-slate-600">
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Surat Keputusan</span> <code class="font-bold text-slate-900">SK</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Surat Undangan</span> <code class="font-bold text-slate-900">SU</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Surat Permohonan</span> <code class="font-bold text-slate-900">SPm</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Surat Pemberitahuan</span> <code class="font-bold text-slate-900">SPb</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Surat Peminjaman</span> <code class="font-bold text-slate-900">SPp</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Surat Pernyataan</span> <code class="font-bold text-slate-900">SPn</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Surat Mandat</span> <code class="font-bold text-slate-900">SM</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Surat Tugas</span> <code class="font-bold text-slate-900">ST</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Surat Keterangan</span> <code class="font-bold text-slate-900">SKet</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Surat Rekomendasi</span> <code class="font-bold text-slate-900">SR</code></li>
+                                    <li class="flex justify-between border-b border-slate-200 pb-2"><span>Surat Balasan</span> <code class="font-bold text-slate-900">SB</code></li>
+                                    <li class="flex justify-between"><span>Surat Pengantar</span> <code class="font-bold text-slate-900">SPeng</code></li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                                <h4 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-file-invoice text-primary-600"></i> Contoh Penerapan Lengkap
+                                </h4>
+                                <div class="space-y-4 text-sm text-slate-600">
+                                    <p><strong>Contoh Surat Keterangan Aktif Organisasi:</strong><br><code class="text-primary-700 bg-primary-50 px-2 py-1 rounded inline-block mt-1 font-mono">001/A/SKet/UKM-LDM/38/IX/2026</code></p>
+                                    <p><strong>Contoh Surat Permohonan:</strong><br><code class="text-primary-700 bg-primary-50 px-2 py-1 rounded inline-block mt-1 font-mono">001/A/SPm/BID-PSDI/UKM-LDM/38/IX/2026</code></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Sistem Arsip -->
+                    <div id="sop-arsip-sop" class="sop-content space-y-8 hidden">
+                        <h3 class="text-2xl font-bold text-slate-900 border-b border-slate-100 pb-4">Sistem Pengarsipan</h3>
+                        <p class="text-slate-600 text-sm">Seluruh surat keluar tersimpan di Google Drive Resmi Kesekretariatan dan dicatat pada Buku Agenda Fisik.</p>
+                        <div class="bg-gray-50/50 border border-gray-200 rounded-xl p-6 flex flex-col sm:flex-row items-center gap-5 hover:shadow-sm transition-all duration-300 max-w-3xl w-full">
+        
+                            <img 
+                                src="rekap-surat-lembaga-dakwah-mahasiswa.png" 
+                                alt="Barcode" 
+                                class="w-20 h-20 object-contain flex-shrink-0"
+                            >
+                            
+                            <div>
+                                <h4 class="text-gray-900 font-bold mb-1 text-base">Pengarsipan Surat Lembaga</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">
+                                    <a href="link.uinsgd.ac.id/rekap-surat-lembaga-dakwah-mahasiswa" target="_blank" class="text-blue-600 hover:underline cursor-pointer">link.uinsgd.ac.id/rekap-surat-lembaga-dakwah-mahasiswa</a>
+                                </p>
+                                <p><code class="text-primary-700 bg-primary-50 px-2 py-1 rounded inline-block mt-1 font-mono">Format Nama File: Nomor Surat_Jenis Surat_Subjek yang Dituju</code></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 4: Etika & Ketentuan Naskah Dinas -->
+                    <div id="sop-etika" class="sop-content space-y-8 hidden">
+                        <div class="border-b border-slate-100 pb-4">
+                            <h3 class="text-2xl font-bold text-slate-900">Ketentuan Pembuatan Surat</h3>
+                            <p class="text-slate-600 text-sm mt-1">Hal-hal yang harus diperhatikan dalam penulisan dan tata letak surat.</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                                <div class="w-8 h-8 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center font-bold flex-shrink-0 text-sm"><i class="fa-solid fa-check"></i></div>
+                                <div>
+                                    <h5 class="font-bold text-slate-900 text-sm">Penggunaan Bahasa Baku</h5>
+                                    <p class="text-slate-600 text-xs mt-1">Seluruh surat menggunakan Bahasa Indonesia yang baik dan benar sesuai Pedoman Umum Ejaan Bahasa Indonesia (PUEBI) dan untuk bahasa asing menggunakan format italic.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                                <div class="w-8 h-8 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center font-bold flex-shrink-0 text-sm"><i class="fa-solid fa-check"></i></div>
+                                <div>
+                                    <h5 class="font-bold text-slate-900 text-sm">Jenis & Ukuran Font</h5>
+                                    <p class="text-slate-600 text-xs mt-1">Jenis huruf standar yang digunakan adalah <code class="bg-white px-1.5 py-0.5 rounded border border-slate-200 font-mono">Times New Roman</code> ukuran 12 pt dengan spasi 1.5 dan alignment Justify (Tulisan rata kanan kiri).</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                                <div class="w-8 h-8 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center font-bold flex-shrink-0 text-sm"><i class="fa-solid fa-check"></i></div>
+                                <div>
+                                    <h5 class="font-bold text-slate-900 text-sm">Ukuran & Margin Kertas</h5>
+                                    <p class="text-slate-600 text-xs mt-1">Ukuran kertas F4 dan menggunakan margin normal.</p>
+                                </div>
+                            </div>
+                            
+                             <!-- Ketentuan 4: Kop Surat -->
+                             <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                                <div class="w-8 h-8 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center font-bold flex-shrink-0 text-sm"><i class="fa-solid fa-check"></i></div>
+                                <div class="w-full">
+                                    <h5 class="font-bold text-slate-900 text-sm">Ketentuan KOP Surat</h5>
+                                    <p class="text-slate-600 text-xs mt-1 mb-3">Berikut adalah desain KOP surat resmi lembaga pada bagian header surat.</p>
+                                    
+                                    <!-- Image Placeholder as Requested -->
+                                    <div class="border border-slate-200 rounded-xl overflow-hidden bg-white max-w-md shadow-sm">
+                                        <img src="KOP Surat LDM.PNG" alt="Panduan Tata Letak Tanda Tangan" class="w-full h-auto object-cover block">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ketentuan 5: Tanda Tangan (Dengan Image Placeholder) -->
+                            <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                                <div class="w-8 h-8 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center font-bold flex-shrink-0 text-sm"><i class="fa-solid fa-check"></i></div>
+                                <div class="w-full">
+                                    <h5 class="font-bold text-slate-900 text-sm">Ketentuan Tanda Tangan</h5>
+                                    <p class="text-slate-600 text-xs mt-1 mb-3">Berikut adalah panduan posisi tanda tangan dan stempel resmi lembaga pada bagian penutup surat. Silakan jadikan referensi visual di bawah ini sebagai acuan tata letak (layout).</p>
+                                    
+                                    <!-- Image Placeholder as Requested -->
+                                    <div class="border border-slate-200 rounded-xl overflow-hidden bg-white max-w-md shadow-sm">
+                                        <img src="Satu TTD.PNG" alt="Panduan Tata Letak Tanda Tangan" class="w-full h-auto object-cover block">
+                                        <img src="Dua TTD.PNG" alt="Panduan Tata Letak Tanda Tangan" class="w-full h-auto object-cover block">
+                                        <img src="Tiga TTD.PNG" alt="Panduan Tata Letak Tanda Tangan" class="w-full h-auto object-cover block">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                                <div class="w-8 h-8 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center font-bold flex-shrink-0 text-sm"><i class="fa-solid fa-check"></i></div>
+                                <div>
+                                    <h5 class="font-bold text-slate-900 text-sm">Lampiran Surat</h5>
+                                    <p class="text-slate-600 text-xs mt-1">Lampiran surat diletakan pada halaman berikutnya setelah tanda tangan.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TEMPLATE SURAT TAB ================= -->
+        <section id="page-templates" class="tab-content hidden">
+            <!-- Header Banner -->
+            <div class="bg-primary-900 text-white py-16 px-4">
+                <div class="max-w-7xl mx-auto text-center space-y-4">
+                    <span class="px-3.5 py-1 rounded-full bg-primary-800 text-emerald-300 font-semibold text-xs tracking-wider uppercase border border-primary-700">Pusat Unduhan Berkas</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Template Dokumen LDM</h2>
+                </div>
+            </div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Template Card 1 -->
+                    <div class="template-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-lg transition-all">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-file-lines"></i></div>
+                                <span class="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-[10px] font-semibold uppercase">Word</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">Surat Dispensasi</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-6">Silahkan unduh template surat ini.</p>
+                        </div>
+                        <button onclick="window.location.href='https://drive.google.com/uc?export=download&id=1Mstl1lSOQ3Z1SOdwCU1SqNeYWyYsVuxw'; showToast('Unduhan Surat Tugas dimulai.')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh File
+                        </button>
+                    </div>
+                     <!-- Template Card 2 -->
+                     <div class="template-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-lg transition-all">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-building"></i></div>
+                                <span class="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-[10px] font-semibold uppercase">Word</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">Surat Keputusan</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-6">Silahkan unduh template surat ini.</p>
+                        </div>
+                        <button onclick="window.location.href='https://drive.google.com/uc?export=download&id=1p23lMpasf555YUnYTK9KwNMzzE_q8Br2'; showToast('Unduhan Surat Tugas dimulai.')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh File
+                        </button>
+                    </div>
+                    <!-- Template Card 3 -->
+                    <div class="template-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-lg transition-all">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-envelope-open-text"></i></div>
+                                <span class="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-[10px] font-semibold uppercase">Word</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">Surat Keterangan aktif Organisasi</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-6">Silahkan unduh template surat ini.</p>
+                        </div>
+                        <button onclick="window.location.href='https://drive.google.com/uc?export=download&id=1U5pryVgjvMJ6XUAjR4c81-Mqwb7-AC_s'; showToast('Unduhan Surat Tugas dimulai.')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh File
+                        </button>
+                    </div>
+                    <!-- Template Card 4 -->
+                    <div class="template-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-lg transition-all">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-envelope-open-text"></i></div>
+                                <span class="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-[10px] font-semibold uppercase">Word</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">Surat Peminjaman Barang</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-6">Silahkan unduh template surat ini.</p>
+                        </div>
+                        <button onclick="window.location.href='https://drive.google.com/uc?export=download&id=1sl8Szh47Id2UlEwBH_CX7o4WjnYLQSBp'; showToast('Unduhan Surat Tugas dimulai.')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh File
+                        </button>
+                    </div>
+                    <!-- Template Card 5 -->
+                    <div class="template-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-lg transition-all">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-envelope-open-text"></i></div>
+                                <span class="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-[10px] font-semibold uppercase">Word</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">Surat Peminjaman Tempat</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-6">Silahkan unduh template surat ini.</p>
+                        </div>
+                        <button onclick="window.location.href='https://drive.google.com/uc?export=download&id=1HfghNL7zOUD2PG6s8TWnpi1H4vAPrfod'; showToast('Unduhan Surat Tugas dimulai.')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh File
+                        </button>
+                    </div>
+                    <!-- Template Card 6 -->
+                    <div class="template-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-lg transition-all">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-envelope-open-text"></i></div>
+                                <span class="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-[10px] font-semibold uppercase">Word</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">Surat Pengantar Proposal</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-6">Silahkan unduh template surat ini.</p>
+                        </div>
+                        <button onclick="window.location.href='https://drive.google.com/uc?export=download&id=1EvaEAuyqJ9nArjbFEm-1XXTMlLV196zK'; showToast('Unduhan Surat Tugas dimulai.')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh File
+                        </button>
+                    </div>
+                    <!-- Template Card 7 -->
+                    <div class="template-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-lg transition-all">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-envelope-open-text"></i></div>
+                                <span class="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-[10px] font-semibold uppercase">Word</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">Surat Rekomendasi</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-6">Silahkan unduh template surat ini.</p>
+                        </div>
+                        <button onclick="window.location.href='https://drive.google.com/uc?export=download&id=1zX4eut5rVBpEskpPIGEHHBdDFWglsHq0'; showToast('Unduhan Surat Tugas dimulai.')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh File
+                        </button>
+                    </div>
+                    <!-- Template Card 8 -->
+                    <div class="template-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-lg transition-all">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-envelope-open-text"></i></div>
+                                <span class="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-[10px] font-semibold uppercase">Word</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">Surat Tugas</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-6">Silahkan unduh template surat ini.</p>
+                        </div>
+                        <button onclick="window.location.href='https://drive.google.com/uc?export=download&id=1I7F3tE7a9_XyAV1E2_Ru7-4MkvPZesg-'; showToast('Unduhan Surat Tugas dimulai.')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh File
+                        </button>
+                    </div>
+                    <!-- Template Card 9 -->
+                    <div class="template-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-lg transition-all">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-envelope-open-text"></i></div>
+                                <span class="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-[10px] font-semibold uppercase">Word</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">Surat Undangan Pemateri</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-6">Silahkan unduh template surat ini.</p>
+                        </div>
+                        <button onclick="window.location.href='https://drive.google.com/uc?export=download&id=1dVXa4GiTqEbJqtYAZFrnIHUT_yRUsukY'; showToast('Unduhan Surat Tugas dimulai.')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh File
+                        </button>
+                    </div>
+                    <!-- Template Card 10 -->
+                    <div class="template-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-lg transition-all">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-envelope-open-text"></i></div>
+                                <span class="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-[10px] font-semibold uppercase">Word</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">Surat Undangan</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-6">Silahkan unduh template surat ini.</p>
+                        </div>
+                        <button onclick="window.location.href='https://drive.google.com/uc?export=download&id=15USxW5ahuNfpJuVM1S4c7bK7nYszmHBz'; showToast('Unduhan Surat Tugas dimulai.')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh File
+                        </button>
+                    </div>
+                    <!-- Template Card 11 -->
+                    <div class="template-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-lg transition-all">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-envelope-open-text"></i></div>
+                                <span class="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-[10px] font-semibold uppercase">Word</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">Template Proposal</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-6">Silahkan unduh template surat ini.</p>
+                        </div>
+                        <button onclick="window.location.href='https://drive.google.com/uc?export=download&id=1k1CSsAooquDGSzb0vOBPmCai7sDtmr7K'; showToast('Unduhan Surat Tugas dimulai.')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh File
+                        </button>
+                    </div>
+                    <!-- Template Card 12 -->
+                    <div class="template-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-lg transition-all">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-envelope-open-text"></i></div>
+                                <span class="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-[10px] font-semibold uppercase">Word</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">Template MoU</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-6">Silahkan unduh template surat ini.</p>
+                        </div>
+                        <button onclick="window.location.href='https://drive.google.com/uc?export=download&id=1rtiqEPhuOYOpaiUN1-c5PTnvoMizApdW'; showToast('Unduhan Surat Tugas dimulai.')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh File
+                        </button>
+                    </div>
+                    <!-- Template Card 13 -->
+                    <div class="template-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-lg transition-all">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-envelope-open-text"></i></div>
+                                <span class="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-[10px] font-semibold uppercase">PDF</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">SOP Persuratan</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-6">Silahkan unduh template surat ini.</p>
+                        </div>
+                        <button onclick="window.location.href='https://drive.google.com/uc?export=download&id=1IZU2Rxs4C0JlssWkik8b8CyUa3Om4pwV'; showToast('Unduhan Surat Tugas dimulai.')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh File
+                        </button>
+                    </div>
+                    <!-- Template Card 14 -->
+                    <div class="template-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-lg transition-all">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-envelope-open-text"></i></div>
+                                <span class="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-[10px] font-semibold uppercase">PDF</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">SOP Sertifikat</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-6">Silahkan unduh template surat ini.</p>
+                        </div>
+                        <button onclick="window.location.href='https://drive.google.com/uc?export=download&id=17ctG4leSia-I5uCiejqJj_u92tMJfYb6'; showToast('Unduhan Surat Tugas dimulai.')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh File
+                        </button>
+                    </div>
+                    <!-- Template Card 15 -->
+                    <div class="template-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-lg transition-all">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-envelope-open-text"></i></div>
+                                <span class="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-[10px] font-semibold uppercase">PDF</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">LPJ Kegiatan</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-6">Silahkan unduh template surat ini.</p>
+                        </div>
+                        <button onclick="window.location.href='https://drive.google.com/uc?export=download&id=1ee4C8YK0-ipjpc0RS1pbeUvB2KCIWjWd'; showToast('Unduhan Surat Tugas dimulai.')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Unduh File
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= CEK ARSIP TAB ================= -->
+        <section id="page-arsip" class="tab-content hidden">
+            <!-- Header Banner -->
+            <div class="bg-primary-900 text-white py-16 px-4">
+                <div class="max-w-7xl mx-auto text-center space-y-4">
+                    <span class="px-3.5 py-1 rounded-full bg-primary-800 text-emerald-300 font-semibold text-xs tracking-wider uppercase border border-primary-700">Verifikasi Dokumen</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Cek Arsip & Nomor Surat</h2>
+                </div>
+            </div>
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="bg-white rounded-3xl p-8 sm:p-12 shadow-sm border border-slate-200 text-center">
+                    <div class="w-20 h-20 rounded-full bg-primary-50 text-primary-600 flex items-center justify-center text-3xl mx-auto mb-6">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2">Pencarian Arsip Surat</h3>
+                    <p class="text-slate-600 text-sm mb-8">Masukkan nomor surat secara lengkap untuk melihat detail arsip dokumen surat</p>
+
+                    <form onsubmit="event.preventDefault(); showToast('Sistem pencarian sedang dalam pemeliharaan.');" class="max-w-lg mx-auto flex flex-col sm:flex-row gap-3">
+                        <input type="text" placeholder="Contoh: 001/LDM/I/2026" class="flex-grow px-5 py-3.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm w-full" required>
+                        <button type="submit" class="bg-primary-500 hover:bg-primary-600 text-white font-bold py-3.5 px-6 rounded-xl text-sm transition-colors w-full sm:w-auto flex-shrink-0">
+                            Cari Arsip
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Pengumuman Info Modal (With Green Dotted Header) -->
+    <div id="info-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden relative flex flex-col animate-in fade-in zoom-in duration-200">
+            <!-- Header Modal 16:9 Full Image -->
+            <div class="relative w-full aspect-video bg-slate-100 overflow-hidden">
+                <!-- Tombol Close (X) -->
+                <div class="absolute top-4 right-4 z-20">
+                    <button onclick="closeModal('info-modal')" class="w-8 h-8 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md text-white flex items-center justify-center transition-colors">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <!-- Gambar full banner -->
+                <img id="modal-icon" src="" alt="Poster Pop-up" class="absolute inset-0 w-full h-full object-cover z-10">
+            </div>
+            <!-- Body Modal -->
+            <div class="p-6 sm:p-8 space-y-4 bg-white relative overflow-y-auto max-h-[50vh]">
+                <h3 id="modal-title" class="text-xl font-bold text-slate-900">Judul Pengumuman</h3>
+                <p id="modal-desc" class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">Isi deskripsi lengkap pengumuman kesekretariatan.</p>
+                <div class="pt-4">
+                    <button onclick="closeModal('info-modal')" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold px-5 py-3 rounded-xl text-sm transition-all shadow-md">Mengerti</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl transform translate-y-24 opacity-0 transition-all duration-300 flex items-center gap-3 text-sm">
+        <i class="fa-solid fa-bell text-emerald-400"></i>
+        <span id="toast-msg">Pesan notifikasi.</span>
+    </div>
+
+    <!-- EXACT 1-Line Footer Implementation Request (No extra text on right, only icons) -->
+    <footer class="bg-slate-900 text-slate-400 py-4 border-t border-slate-800 mt-auto text-xs sm:text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+            <p>&copy; Kesekretariatan Lembaga Dakwah Mahasiswa.</p>
+            <div class="flex items-center gap-2">
+                <a href="https://www.instagram.com/ldmuinbdg/" aria-label="Instagram" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center transition-colors"><i class="fa-brands fa-instagram text-slate-300"></i></a>
+                <a href="https://www.youtube.com/@LDKLDMUINBDG" aria-label="YouTube" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center transition-colors"><i class="fa-brands fa-youtube text-slate-300"></i></a>
+                <a href="https://wa.me/6285176981731" aria-label="WhatsApp" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center transition-colors"><i class="fa-brands fa-whatsapp text-slate-300"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab System SPA Navigation
+        function switchTab(targetId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            const targetEl = document.getElementById('page-' + targetId);
+            if (targetEl) targetEl.classList.remove('hidden');
+            if (targetEl) targetEl.classList.add('block');
+
+            // Desktop Nav Update
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.getAttribute('data-target') === targetId) {
+                    btn.classList.add('text-primary-600', 'bg-primary-50');
+                    btn.classList.remove('text-slate-600', 'hover:text-primary-600', 'hover:bg-slate-100');
+                } else {
+                    btn.classList.remove('text-primary-600', 'bg-primary-50');
+                    btn.classList.add('text-slate-600', 'hover:text-primary-600', 'hover:bg-slate-100');
+                }
+            });
+            
+            // Mobile Nav Update
+            document.querySelectorAll('.nav-btn-mobile').forEach(btn => {
+                if (btn.getAttribute('data-target') === targetId) {
+                    btn.classList.add('text-primary-600', 'bg-primary-50');
+                    btn.classList.remove('text-slate-700', 'hover:bg-slate-100');
+                } else {
+                    btn.classList.remove('text-primary-600', 'bg-primary-50');
+                    btn.classList.add('text-slate-700', 'hover:bg-slate-100');
+                }
+            });
+
+            window.scrollTo(0, 0); 
+        }
+
+        // Mobile Hamburger Menu
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+        function toggleMobileMenu() { mobileMenu.classList.add('hidden'); }
+
+        // SOP Inner Tabs
+        function switchSopTab(sopId) {
+            document.querySelectorAll('.sop-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            const sopEl = document.getElementById('sop-' + sopId);
+            sopEl.classList.remove('hidden');
+            sopEl.classList.add('block');
+
+            document.querySelectorAll('.sop-tab-btn').forEach(btn => {
+                if (btn.getAttribute('data-sop') === sopId) {
+                    btn.classList.add('text-white', 'bg-primary-500', 'shadow-sm');
+                    btn.classList.remove('text-slate-600', 'hover:bg-slate-100');
+                } else {
+                    btn.classList.remove('text-white', 'bg-primary-500', 'shadow-sm');
+                    btn.classList.add('text-slate-600', 'hover:bg-slate-100');
+                }
+            });
+        }
+
+        // Modal Functionality
+        function showInfoModal(title, desc, imageSrc) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerHTML = desc;
+
+            document.getElementById('modal-icon').src = imageSrc;
+
+            document.getElementById('info-modal').classList.remove('hidden');
+            document.getElementById('info-modal').classList.add('flex');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.getElementById(modalId).classList.remove('flex');
+        }
+
+        // Toast Notification System
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+        let dataPengumuman = [];
+
+        async function muatPengumuman() {
+            const container = document.getElementById('pengumuman-container');
+            try {
+                const response = await fetch('data/pengumuman.json');
+                const data = await response.json();
+                dataPengumuman = data.items || [];
+
+                if (dataPengumuman.length === 0) {
+                    container.innerHTML = '<p class="text-slate-500 text-sm col-span-full text-center">Belum ada pengumuman terbaru.</p>';
+                    return;
+                }
+
+                container.innerHTML = dataPengumuman.map((item, index) => `
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                        <div class="h-32 relative overflow-hidden">
+                            <img src="${item.poster}" alt="${item.judul}" class="absolute inset-0 w-full h-full object-cover z-0">
+                            <span class="absolute top-4 left-4 bg-black/40 text-white backdrop-blur-md px-3 py-1 text-[10px] font-bold rounded-full border border-white/30 z-10">${item.kategori}</span>
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col justify-between">
+                            <div>
+                                <div class="text-xs text-slate-400 font-medium mb-2"><i class="fa-regular fa-clock mr-1"></i> ${item.tanggal}</div>
+                                <h3 class="text-lg font-bold text-slate-900 mb-3 leading-snug">${item.judul}</h3>
+                            </div>
+                            <button onclick="bukaDetailPengumuman(${index})" class="text-primary-600 text-sm font-bold flex items-center gap-2 hover:text-primary-700 w-fit">
+                                Baca Selengkapnya <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Gagal memuat pengumuman:', error);
+            }
+        }
+
+        function bukaDetailPengumuman(index) {
+            const item = dataPengumuman[index];
+            if (item) {
+                const isiDenganLink = item.isi.replace(
+                    /(https?:\/\/[^\s]+)/g,
+                    '<a href="$1" target="_blank" class="text-blue-600 hover:underline cursor-pointer">$1</a>'
+                );
+                showInfoModal(item.judul, isiDenganLink, item.poster);
+            }
+        }
+
+        // Jalankan otomatis saat halaman dibuka
+        document.addEventListener('DOMContentLoaded', muatPengumuman);
+    </script>
+</body>
+</html>

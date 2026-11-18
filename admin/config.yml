@@ -1,0 +1,26 @@
+backend:
+  name: github
+  repo: ldmuinbdgkesekretariatan-atmin/Sekretariat-LDM   # Ganti dengan username & nama repo GitHub kamu
+  branch: main
+
+media_folder: "assets/pengumuman"
+public_folder: "assets/pengumuman"
+
+collections:
+  - name: "portal"
+    label: "Portal Kesekretariatan"
+    files:
+      - name: "pengumuman"
+        label: "Pengumuman & Agenda"
+        file: "data/pengumuman.json"
+        fields:
+          - name: "items"
+            label: "Daftar Pengumuman"
+            widget: "list"
+            summary: "{{fields.judul}} — {{fields.tanggal}}"
+            fields:
+              - { label: "Judul Pengumuman", name: "judul", widget: "string" }
+              - { label: "Kategori", name: "kategori", widget: "select", options: ["Agenda", "Administrasi", "Pengumuman"], default: "Agenda" }
+              - { label: "Tanggal", name: "tanggal", widget: "string", hint: "Contoh: 26 September 2026" }
+              - { label: "Upload Poster", name: "poster", widget: "image" }
+              - { label: "Isi Lengkap Pengumuman", name: "isi", widget: "text" }

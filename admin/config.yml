@@ -23,4 +23,4 @@ collections:
               - { label: "Kategori", name: "kategori", widget: "select", options: ["Agenda", "Administrasi", "Pengumuman"], default: "Agenda" }
               - { label: "Tanggal", name: "tanggal", widget: "string", hint: "Contoh: 26 September 2026" }
               - { label: "Upload Poster", name: "poster", widget: "image" }
-              - { label: "Isi Lengkap Pengumuman", name: "isi", widget: "text" }
+              - { label: "Isi Lengkap Pengumuman", name: "isi", widget: "markdown" }
